@@ -1,0 +1,22 @@
+[core]
+  filemode = false
+  ignorecase = false
+  editor = /usr/local/bin/vim
+[user]
+  name = Tiny-Box
+  email = Tiny_Box@outlook.com
+[color]
+  ui = always
+[alias]
+  logg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative
+  co = checkout 
+  cb = checkout -b 
+  sync = pull local master
+  b = branch -v
+  bd = branch -d
+  bD = branch -D
+  br = branch -dr
+  df = diff
+  cp = cherry-pick
+[push]
+  default = simple
