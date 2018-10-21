@@ -1,60 +1,110 @@
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" This is the personal vim config used by TinyBox.
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Enable Vundle
-set rtp+=~/.vim/bundle/Vundle.vim
-call vundle#begin()
-Plugin 'VundleVim/Vundle.vim'
+" Specify a directory for plugins
+" - For Neovim: ~/.local/share/nvim/plugged
+" - Avoid using standard Vim directory names like 'plugin'
+call plug#begin('~/.vim/plugged')
 
-" Enable plugins
-Plugin 'scrooloose/nerdtree'
-Plugin 'majutsushi/tagbar'
-Plugin 'Lokaltog/vim-easymotion'
-Plugin 'godlygeek/tabular'
-Plugin 'plasticboy/vim-markdown'
-Plugin 'kien/ctrlp.vim'
-" Plugin 'Lokaltog/vim-powerline'
-Plugin 'jelera/vim-javascript-syntax'
-Plugin 'othree/javascript-libraries-syntax.vim'
-Plugin 'StanAngeloff/php.vim'
-Plugin 'digitaltoad/vim-pug'
-Plugin 'vim-airline/vim-airline'
-Plugin 'SirVer/ultisnips'
-Plugin 'tell-k/vim-autopep8'
-" Plugin 'honza/vim-snippets'
-Plugin 'rking/ag.vim'
-Plugin 'junegunn/fzf'
-Plugin 'w0rp/ale'
-Plugin 'nvie/vim-flake8'
-Plugin 'mindriot101/vim-yapf'
-Plugin 'scrooloose/nerdcommenter'
-Plugin 'terryma/vim-expand-region'
-Plugin 'terryma/vim-smooth-scroll'
-Plugin 'airblade/vim-gitgutter'
-Plugin 'tpope/vim-fugitive'
-Plugin 'dyng/ctrlsf.vim'
-Plugin 'Shougo/neocomplete.vim'
-" Color Schemes
-Plugin 'flazz/vim-colorschemes'
-Plugin 'altercation/vim-colors-solarized'
-Plugin 'chriskempson/base16-vim'
+  " Basic Feature  {{{
+  "
+  " menu
+  Plug 'scrooloose/nerdtree'
 
-call vundle#end()
+  " file search
+  Plug 'kien/ctrlp.vim'
+  Plug 'junegunn/fzf'
+
+  " text search
+  Plug 'mileszs/ack.vim'
+  Plug 'dyng/ctrlsf.vim'
+
+  " lint
+  Plug 'w0rp/ale'
+
+  " comment
+  Plug 'scrooloose/nerdcommenter'
+
+  " git
+  Plug 'airblade/vim-gitgutter'
+  Plug 'tpope/vim-fugitive'
+
+  " code snippet
+  Plug 'SirVer/ultisnips'
+
+  " }}}
+  "
+
+  " Python {{{
+  "
+  Plug 'tell-k/vim-autopep8'
+  Plug 'nvie/vim-flake8'
+  Plug 'fisadev/vim-isort', {'autoload': {'filetypes': ['python']}}
+  "
+  " }}}
+  "
+  " PHP {{{
+  "
+  Plug 'StanAngeloff/php.vim'
+  "
+  " }}}
+  "
+  " GUI {{{
+  "
+  Plug 'vim-airline/vim-airline'
+  "
+  " }}}
+  "
+  " Colorschemes {{{
+
+  " Dark themes
+  " Improved terminal version of molokai, almost identical to the GUI one
+  Plug 'joedicastro/vim-molokai256'
+
+  Plug 'tomasr/molokai'
+  Plug 'sjl/badwolf'
+  Plug 'nielsmadan/harlequin'
+
+
+  " Light themes
+  Plug 'vim-scripts/summerfruit256.vim'
+  Plug 'joedicastro/vim-github256'
+
+  " Make terminal themes from GUI themes
+  Plug 'godlygeek/csapprox', {'on_cmd' : ['CSApprox', 'CSApproxSnapshot']}
+
+  " }}}
+  "
+  "
+  " Other {{{
+  "
+  Plug 'terryma/vim-expand-region'
+  Plug 'terryma/vim-smooth-scroll'
+
+  Plug 'ryanoasis/vim-devicons'
+  "
+  " }}}
+
+call plug#end()
+
+
+
+" Required:
+filetype plugin indent on
+syntax enable
+
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Environment
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Basics
+
+" Basics  options {{{
+
 set nocompatible               " must be first line
 set background=dark            " Assume a dark background
-
-syntax on                      " syntax highlighting
-filetype plugin indent on      " Automatically detect file types.
 
 " General
 " set fencs=utf-8,gb2312,gbk     " Sets the default encoding
 set fileencodings=ucs-bom,utf-8,utf-16,gbk,big5,gb18030,latin1
 " set autochdir                  " always switch to the current file directory.
+set encoding=utf-8
 
 set nospell                    " spell checking off
 set shortmess+=filmnrxoOtT     " abbrev. of messages (avoids 'hit enter')
@@ -64,10 +114,6 @@ set history=1000               " Store a ton of history (default is 20)
 set noswapfile
 set backup                     " backups are nice ...
 set backupdir=~/.vim/backup
-set undofile                   " persistent undo
-set undolevels=1000            " maximum number of changes that can be undone
-set undoreload=10000           " maximum number lines to save for undo on a buffer reload
-set undodir=~/.vim/undo
 
 " When vimrc is edited, reload it
 autocmd! BufWritePost ~/.vimrc source ~/.vimrc
@@ -75,26 +121,43 @@ autocmd! BufWritePost ~/.vimrc source ~/.vimrc
 " set clipboard
 set clipboard+=unnamed
 
-autocmd FileType php setlocal omnifunc=phpcomplete#CompletePHP
+" }}}
 
-set tags+=~/workplace/baixing/haojing/tags;,./tags;,tags;
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Vim UI
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-if filereadable(expand("~/.vim/bundle/vim-colors-solarized/colors/solarized.vim"))
-    color solarized
-    set background=dark
-    let g:solarized_termcolors=256
-    let g:solarized_termtrans=1
+" if filereadable(expand("~/.vim/bundle/vim-colors-solarized/colors/solarized.vim"))
+"     color solarized
+"     set background=dark
+"     let g:solarized_termcolors=256
+"     let g:solarized_termtrans=1
+" endif
+
+
+" Colorscheme {{{
+
+syntax enable                  " enable the syntax highlight
+set background=dark            " set a dark background
+set t_Co=256                   " 256 colors for the terminal
+if has('gui_running')
+    colorscheme molokai
+else
+    colorscheme molokai256
 endif
-" " lighting line setting 
-" let g:lightline = {
-      " \ 'colorscheme': 'wombat',
-      " \ }
-set term=builtin_xterm         " Make terminal stuff works
-set t_Co=256
+
+" }}}
+
+
+" Font {{{
+
+set guifont=Droid\ Sans\ Mono\ for\ Powerline\ Nerd\ Font\ Complete\ 12
+
+" }}}
+
+
+" Basic config {{{
 
 set tabpagemax=15             " only show 15 tabs
 set showmode                  " display the current mode
@@ -126,26 +189,72 @@ set list
 set listchars=tab:>\ ,trail:\ ,extends:#,nbsp:\  " Highlight problematic whitespace
 set cc=100
 
+" }}}
+
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Formatting
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+" Tabs, space and wrapping {{{
+
+set expandtab                  " spaces instead of tabs
+set tabstop=4                  " a tab = four spaces
+set shiftwidth=4               " number of spaces for auto-indent
+set softtabstop=4              " a soft-tab of four spaces
+set autoindent                 " set on the auto-indent
+
+" set formatoptions=qrn1ct
+set textwidth=80
+set colorcolumn=81
+
+function! ToggleWrap()
+    let s:nowrap_cc_bg = [22, '#005f00']
+    redir => s:curr_cc_hi
+    silent hi ColorColumn
+    redir END
+    let s:curr_cc_ctermbg = matchstr(s:curr_cc_hi, 'ctermbg=\zs.\{-}\s\ze\1')
+    let s:curr_cc_guibg = matchstr(s:curr_cc_hi, 'guibg=\zs.\{-}\_$\ze\1')
+    if s:curr_cc_ctermbg != s:nowrap_cc_bg[0]
+        let g:curr_cc_ctermbg = s:curr_cc_ctermbg
+    endif
+    if s:curr_cc_guibg != s:nowrap_cc_bg[1]
+        let g:curr_cc_guibg = s:curr_cc_guibg
+    endif
+    if &textwidth == 80
+        set textwidth=0
+        exec 'hi ColorColumn ctermbg='.s:nowrap_cc_bg[0].
+                    \' guibg='.s:nowrap_cc_bg[1]
+    elseif &textwidth == 0
+        set textwidth=80
+        exec 'hi ColorColumn ctermbg='.g:curr_cc_ctermbg.
+                    \' guibg='.g:curr_cc_guibg
+    endif
+endfunction
+
+nmap <silent><Leader>ew :call ToggleWrap()<CR>
+
+" }}}
+
+
+" Basic Config {{{
+
 set wrap            " wrap long lines
 set linebreak       " set linebreak
 set textwidth=0     " sets the text width
-set autoindent      " Auto indent
 set smartindent     " Smart indet
-set expandtab       " tabs are spaces, not tabs
-set smarttab        " Smart tab
-set shiftwidth=4    " use indents of 4 spaces
-set tabstop=4       " an indentation every four columns
-set softtabstop=4   " let backspace delete indent
+
+" }}}
+
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Key Mappings
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"The default leader is '\', but many people prefer ',' as it's in a standard
-"location
+
+" Basic Config {{{
+
+" The default leader is '\', but many people prefer ',' as it's in a standard
+" location, BUT I LOVE SPACE!!!!
 let mapleader = ' '
 
 " Fast editing of the .vimrc
@@ -156,26 +265,48 @@ nnoremap <Leader>w :w<CR>
 nnoremap <Leader>q :q<CR>
 nnoremap <Leader>x :bd<CR>
 
-" Remap VIM 0 and 9
-map 9 ^
-map 0 $
-
+" Quickly esc in insert mode
 inoremap jk <Esc>
 
-" " Paste mode toggle
-" nnoremap <leader>pp :setlocal paste!<cr>
+" }}}
 
-" Use the arrows to something usefull
-nnoremap <right> :bn!<cr>
-nnoremap <left> :bp!<cr>
 
-" move windows
+" split windows {{{
+
+nnoremap <Leader>- :sp<CR>
+nnoremap <Leader>+ :vsp<CR>
+
+" }}}
+
+
+" move windows {{{
+
 map <C-j> <C-W>j
 map <C-k> <C-W>k
 map <C-h> <C-W>h
 map <C-l> <C-W>l
 
-" move line like st
+" }}}
+
+
+" Remap VIM 0 and 9 {{{
+
+map 9 ^
+map 0 $
+
+" }}}
+
+
+" Use the arrows to something usefull {{{
+
+nnoremap <right> :bn!<cr>
+nnoremap <left> :bp!<cr>
+
+" }}}
+
+
+" move line like st {{{
+
 nnoremap <A-j> :m .+1<CR>==
 nnoremap <A-k> :m .-2<CR>==
 inoremap <A-j> <Esc>:m .+1<CR>==gi
@@ -189,43 +320,43 @@ set <A-l>=¬
 set <A-a>=å
 set <A-d>=∂
 
-" Adjust viewports to the same size
-map <Leader>= <C-w>=
+" }}}
 
-" Remove the Windows ^M - when the encodings gets messed up
-noremap <Leader>m mmHmt:%s/<C-V><cr>//ge<cr>'tzt'm
 
-" Close the current buffer
-map <leader>d :Bclose<cr>
+" Cut / Paste {{{
 
-" Close all the buffers
-map <leader>D :1,300 bd<cr>:q<cr>
+" to/from the clipboard
+map <Leader>y "*y
+map <Leader>p "*p
 
-" When pressing <leader>cd switch to the directory of the open buffer
-map <leader>cd :cd %:p:h<cr>
+" toggle paste mode
+map <Leader>P :set invpaste<CR>
 
 " Yank from the cursor to the end of the line, to be consistent with C and D.
 nnoremap Y y$
 
-"clearing highlighted search
+" }}}
+
+" clearing highlighted search {{{
+
 nmap <silent> <leader>/ :nohlsearch<CR>
 
-" Shortcuts
-" Change Working Directory to that of the current file
+" }}}
+
+" Change Working Directory to that of the current file {{{
+
 cmap cwd lcd %:p:h
 cmap cd. lcd %:p:h
 
-" For when you forget to sudo.. Really Write the file.
-cmap w!! w !sudo tee % >/dev/null
+" }}}
 
-" Save and return to normal mode on FocusLost
-au FocusLost * :silent! wall                 " Save on FocusLost
-au FocusLost * call feedkeys("\<C-\>\<C-n>") " Return to normal mode on FocustLost
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Plugins {
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" NerdTree
+
+" NerdTree {{{
+
     map <C-n> :NERDTreeToggle<CR>:NERDTreeMirror<CR>
     map <leader>e :NERDTreeFind<CR>
     nmap <leader>nf :NERDTreeFind<CR>
@@ -237,11 +368,11 @@ au FocusLost * call feedkeys("\<C-\>\<C-n>") " Return to normal mode on FocustLo
     let NERDTreeShowHidden=1
     let NERDTreeKeepTreeInNewTab=1
 
-" Tagbar
-    nnoremap <silent> <C-t> :TagbarToggle<CR>
+" }}}
 
-" airline
-"     let g:airline_theme='light'
+
+" airline {{{
+
     let g:airline_powerline_fonts = 1
     function! AirlineInit()
       let g:airline_section_a = airline#section#create(['(づ￣ 3￣)づ', ' ', 'mode'])
@@ -250,14 +381,11 @@ au FocusLost * call feedkeys("\<C-\>\<C-n>") " Return to normal mode on FocustLo
     endfunction
     autocmd User AirlineAfterInit call AirlineInit()
 
-" Trigger 
-    let g:UltiSnipsUsePythonVersion=2
-    let g:UltiSnipsExpandTrigger="<Leader><tab>"
-    let g:UltiSnipsJumpForwardTrigger="<c-b>"
-    let g:UltiSnipsJumpBackwardTrigger="<c-z>"
-    let g:UltiSnipsListSnippets="<c-e>"
+" }}}
 
-" ale
+
+" ale {{{
+
     let g:ale_linters = {
                 \   'sh' : ['shellcheck'],
                 \   'vim' : ['vint'],
@@ -269,7 +397,7 @@ au FocusLost * call feedkeys("\<C-\>\<C-n>") " Return to normal mode on FocustLo
     " python standard
     let g:ale_python_flake8_executable = 'python3'
     let g:ale_python_flake8_options = '-m flake8'
-
+    let g:ale_php_phpcs_standard="/Users/tinybox/workplace/pgyer/config/pgyer_phpcs_ruleset.xml"
     " If emoji not loaded, use default sign
     try
         let g:ale_sign_warning = emoji#for('boom')
@@ -315,84 +443,98 @@ au FocusLost * call feedkeys("\<C-\>\<C-n>") " Return to normal mode on FocustLo
     nmap <Leader>en <Plug>(ale_next)
     nmap <Leader>eN <Plug>(ale_previous)
 
-" fzf
+" }}}
+
+
+" Ack {{{
+
+    if executable('ag')
+      let g:ackprg = 'ag --vimgrep'
+    endif
+    ca Ack Ack!
+
+" }}}
+
+
+" fzf {{{
+
     nmap <leader>p :FZF<CR>
 
-" ctrlp
+" }}}
+
+
+" ctrlp {{{
+
     set wildignore+=*/tmp/*,*.so,*.swp,*.zip
     let g:ctrlp_custom_ignore = '\v[\/]\.(git|hg|svn)$'
     nnoremap <C-m> :CtrlPBuffer<CR>
 
-" nerdcomment
+" }}}
+
+
+" nerdcomment {{{
+
     let g:NERDSpaceDelims=1
     let g:NERDDefaultAlign='start'
 
-" vim-expand-region
+" }}}
+
+
+" vim-expand-region {{{
+
     vmap v <Plug>(expand_region_expand)
     vmap V <Plug>(expand_region_shrink)
 
-" vim-smooth-scroll
+" }}}
+
+
+" vim-smooth-scroll {{{
+
     noremap <silent> <Leader>k :call smooth_scroll#up(&scroll, 0, 2)<CR>
     noremap <silent> <Leader>j :call smooth_scroll#down(&scroll, 0, 2)<CR>
 
-
-" ag
-    let g:ag_arg='ag -S --nocolor --nogroup --column --ignore tags --ignore .git'
-    " disbale open first result in buffer
-    ca Ag Ag!
+" }}}
 
 
-" ctrlsf
+" ctrlsf {{{
+
     nnoremap <leader>f :CtrlSF<Space>
     nnoremap <C-f> :CtrlSFOpen<CR>
 
-" gitgutter
+" }}}
+
+
+" gitgutter {{{
+
     nmap <Leader>gn <Plug>GitGutterNextHunk
     nmap <Leader>gp <Plug>GitGutterPrevHunk
 
-" easymotion
-    let g:EasyMotion_smartcase = 1
-    "let g:EasyMotion_startofline = 0 " keep cursor colum when JK motion
-    map <Leader><leader>h <Plug>(easymotion-linebackward)
-    map <Leader><Leader>j <Plug>(easymotion-j)
-    map <Leader><Leader>k <Plug>(easymotion-k)
-    map <Leader><leader>l <Plug>(easymotion-lineforward)
-    " 重复上一次操作, 类似repeat插件, 很强大
-    map <Leader><leader>. <Plug>(easymotion-repeat)
+" }}}
 
-"" signify
-"    let g:signify_vcs_list              = [ 'git' ]
-"    let g:signify_cursorhold_insert     = 1
-"    let g:signify_cursorhold_normal     = 1
-"    let g:signify_update_on_bufenter    = 0
-"    let g:signify_update_on_focusgained = 1
-"    let g:signify_realtime = 0
-"
-"    nnoremap <leader>gr :SignifyRefresh<CR>
-"    nnoremap <leader>gd :SignifyDebug<CR>
-"    nnoremap <leader>gl :SignifyList<CR>
-"
-"    " hunk jumping
-"    nmap <leader>gj <plug>(signify-next-hunk)
-"    nmap <leader>gk <plug>(signify-prev-hunk)
 
-" autopep8
+" autopep8 {{{
+
     autocmd FileType python noremap <buffer> <C-=> :call Autopep8()<CR>
     let g:autopep8_ignore="E731"
     let g:autopep8_max_line_length=120
     let g:autopep8_disable_show_diff=1
 
-" js syntax
-autocmd BufReadPre *.js let b:javascript_lib_use_jquery = 1
-autocmd BufReadPre *.js let b:javascript_lib_use_underscore = 1
-autocmd BufReadPre *.js let b:javascript_lib_use_backbone = 1
-autocmd BufReadPre *.js let b:javascript_lib_use_prelude = 0
-autocmd BufReadPre *.js let b:javascript_lib_use_angularjs = 0
-
-" php syntax
+" }}}
 
 
-" neocomplete
+" js syntax {{{
+
+    autocmd BufReadPre *.js let b:javascript_lib_use_jquery = 1
+    autocmd BufReadPre *.js let b:javascript_lib_use_underscore = 1
+    autocmd BufReadPre *.js let b:javascript_lib_use_backbone = 1
+    autocmd BufReadPre *.js let b:javascript_lib_use_prelude = 0
+    autocmd BufReadPre *.js let b:javascript_lib_use_angularjs = 0
+
+" }}}
+
+
+" neocomplete {{{
+
     "Note: This option must be set in .vimrc(_vimrc).  NOT IN .gvimrc(_gvimrc)!
     " Disable AutoComplPop.
     let g:acp_enableAtStartup = 0
@@ -409,17 +551,17 @@ autocmd BufReadPre *.js let b:javascript_lib_use_angularjs = 0
         \ 'vimshell' : $HOME.'/.vimshell_hist',
         \ 'scheme' : $HOME.'/.gosh_completions'
             \ }
-    
+
     " Define keyword.
     if !exists('g:neocomplete#keyword_patterns')
         let g:neocomplete#keyword_patterns = {}
     endif
     let g:neocomplete#keyword_patterns['default'] = '\h\w*'
-    
+
     " Plugin key-mappings.
     inoremap <expr><C-g>     neocomplete#undo_completion()
     inoremap <expr><C-l>     neocomplete#complete_common_string()
-    
+
     " Recommended key-mappings.
     " <CR>: close popup and save indent.
     inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
@@ -435,23 +577,23 @@ autocmd BufReadPre *.js let b:javascript_lib_use_angularjs = 0
     inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
     " Close popup by <Space>.
     "inoremap <expr><Space> pumvisible() ? "\<C-y>" : "\<Space>"
-    
+
     " AutoComplPop like behavior.
     "let g:neocomplete#enable_auto_select = 1
-    
+
     " Shell like behavior(not recommended).
     "set completeopt+=longest
     "let g:neocomplete#enable_auto_select = 1
     "let g:neocomplete#disable_auto_complete = 1
     "inoremap <expr><TAB>  pumvisible() ? "\<Down>" : "\<C-x>\<C-u>"
-    
+
     " Enable omni completion.
     autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
     autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
     autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
     autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
     autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
-    
+
     " Enable heavy omni completion.
     if !exists('g:neocomplete#sources#omni#input_patterns')
       let g:neocomplete#sources#omni#input_patterns = {}
@@ -459,11 +601,8 @@ autocmd BufReadPre *.js let b:javascript_lib_use_angularjs = 0
     "let g:neocomplete#sources#omni#input_patterns.php = '[^. \t]->\h\w*\|\h\w*::'
     "let g:neocomplete#sources#omni#input_patterns.c = '[^.[:digit:] *\t]\%(\.\|->\)'
     "let g:neocomplete#sources#omni#input_patterns.cpp = '[^.[:digit:] *\t]\%(\.\|->\)\|\h\w*::'
-    
-" haojing 
-au bufnewfile,bufread */haojing*/*.* setlocal noexpandtab
-au bufnewfile,bufread */haojing*/*.php setlocal nolist
-au bufnewfile,bufread */haojing*/*.php let b:ale_php_phpcs_standard="/Users/tinybox/Documents/code_style/phpcs_ruleset.xml"
+
+" }}}
 
 function! Run()
   if &filetype == 'sh'
@@ -481,11 +620,12 @@ function! Run()
   endif
 endf
 
+" 这个是为了以后项目推送做个例子
 function! Synchaojing()
-    exec "!rsync -hlrtuOP --del --exclude-from /Users/tinybox/workplace/baixing/haojing/.rsync_ignore /Users/tinybox/workplace/baixing/haojing/ wangyanxiang@192.168.2.2:~/haojing/"
+    exec "!rsync -hlrtuOP --del --exclude-from local_haojing_path/.rsync_ignore local_haojing_path username@remote_ip:remote_haojing_path"
 endf
 
-nnoremap rt :call Synchaojing()<CR><CR>
+" nnoremap rt :call Syncfrontjs()<CR><CR>
 nnoremap rr :call Run()<CR>
 
 function! PhpSyntaxOverride()
@@ -497,3 +637,4 @@ augroup phpSyntaxOverride
   autocmd!
   autocmd FileType php call PhpSyntaxOverride()
 augroup END
+
